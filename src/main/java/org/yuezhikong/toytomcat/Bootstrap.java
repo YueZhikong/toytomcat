@@ -1,9 +1,10 @@
 package org.yuezhikong.toytomcat;
 
+
 import cn.hutool.core.util.NetUtil;
+import org.yuezhikong.toytomcat.http.Request;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,12 +20,8 @@ public class Bootstrap {
             ServerSocket ss = new ServerSocket(port);
             while (true){
                 Socket s = ss.accept();
-                InputStream is = s.getInputStream();
-                int bufferSize = 1024;
-                byte[] buffer = new byte[bufferSize];
-                is.read(buffer);
-                String requestString = new String(buffer,"utf-8");
-                System.out.println("浏览器的输入信息："+requestString);
+                Request request = new Request(s);
+                System.out.println("浏览器的输入信息："+request.getRequestString());
                 OutputStream os = s.getOutputStream();
                 String response_head = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/html\r\n\r\n";
                 String responseString = "Hello DIY Tomcat from how2j.cn";
