@@ -1,6 +1,8 @@
 package org.yuezhikong.toytomcat.http;
 
 import cn.hutool.core.util.StrUtil;
+import org.yuezhikong.toytomcat.Bootstrap;
+import org.yuezhikong.toytomcat.catalina.Context;
 import org.yuezhikong.toytomcat.util.MiniBrowser;
 
 import java.io.IOException;
@@ -8,11 +10,14 @@ import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 月氏空
+ */
 public class Request {
     private String requestString;
     private String uri;
     private Socket socket;
-
+    private Context context;
     public Request(Socket socket)throws IOException{
         this.socket = socket;
         parseHttpRequest();
@@ -20,6 +25,19 @@ public class Request {
             return;
         }
         parseUri();
+    }
+    private void parseContext(){
+        String path = StrUtil.subBetween(uri,"/","/");
+        if (null == path){
+            path = "/";
+        }
+        else {
+            path = "/"+path;
+        }
+        context = Bootstrap.contextMap.get(path);
+        if (null == context) {
+            context = Bootstrap.contextMap.get("/");
+        }
     }
     private void parseHttpRequest() throws IOException{
         InputStream is = this.socket.getInputStream();
@@ -46,5 +64,13 @@ public class Request {
 
     public String getUri() {
         return uri;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

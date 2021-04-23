@@ -4,6 +4,9 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author 月氏空
+ */
 public class Response {
     private StringWriter stringWriter;
     private PrintWriter writer;

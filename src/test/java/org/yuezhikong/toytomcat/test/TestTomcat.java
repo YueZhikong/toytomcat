@@ -1,11 +1,17 @@
 package org.yuezhikong.toytomcat.test;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.TimeInterval;
 import cn.hutool.core.util.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yuezhikong.toytomcat.util.MiniBrowser;
+
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class TestTomcat {
     private static int port = 18080;
@@ -34,6 +40,27 @@ public class TestTomcat {
         Assert.assertEquals(html,"Hello DIY Tomcat from a.html");
     }
 
+    @Test
+    public void testTimeConsumeHtml() throws InterruptedException{
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(20,20,60, TimeUnit.SECONDS,new LinkedBlockingQueue<Runnable>(10));
+        TimeInterval timeInterval = DateUtil.timer();
+
+        for (int i = 0; i < 3; i++) {
+            threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    getContentString("/timeConsume.html");
+                }
+            });
+        }
+
+        threadPool.shutdown();
+        threadPool.awaitTermination(1,TimeUnit.HOURS);
+
+        long duration = timeInterval.intervalMs();
+
+        Assert.assertTrue(duration<3000);
+    }
     private String getContentString(String uri) {
         String url = StrUtil.format("http://{}:{}{}", ip,port,uri);
         String content = MiniBrowser.getContentString(url);
