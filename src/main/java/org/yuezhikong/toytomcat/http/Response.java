@@ -2,12 +2,10 @@ package org.yuezhikong.toytomcat.http;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
-/**
- * @author 月氏空
- */
 public class Response {
+
     private StringWriter stringWriter;
     private PrintWriter writer;
     private String contentType;
@@ -17,17 +15,18 @@ public class Response {
         this.contentType = "text/html";
     }
 
-    public PrintWriter getWriter() {
-        return writer;
-    }
-
     public String getContentType() {
         return contentType;
     }
 
-    public byte[] getBody(){
+    public PrintWriter getWriter() {
+        return writer;
+    }
+
+    public byte[] getBody() throws UnsupportedEncodingException {
         String content = stringWriter.toString();
-        byte[] body = content.getBytes(StandardCharsets.UTF_8);
+        byte[] body = content.getBytes("utf-8");
         return body;
     }
+
 }

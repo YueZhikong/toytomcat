@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'org.yuezhikong'
-version '1.0-SNAPSHOT'
+version '1.0.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -13,11 +13,11 @@ dependencies {
     implementation group: 'cn.hutool', name: 'hutool-all', version: '4.3.1'
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.2.1'
     implementation group: 'org.apache.tomcat', name: 'tomcat-jasper', version: '8.0.53'
-    testImplementation group: 'junit', name: 'junit', version: '4.9'
+    testImplementation group: 'junit', name: 'junit', version: '4.10'
     implementation group: 'log4j', name: 'log4j', version: '1.2.17'
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 }
 
-test {
-    useJUnitPlatform()
-}
+//test {
+//    useJUnitPlatform()
+//}
