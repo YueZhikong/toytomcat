@@ -37,11 +37,11 @@ public class ServerXMLUtil {
         return host.attr("defaultHost");
     }
 
-    public static String getHostName(){
+    public static String getServiceName(){
         String xml = FileUtil.readUtf8String(Constant.serverXmlFile);
         Document d = Jsoup.parse(xml);
 
-        Element host = d.select("Host").first();
+        Element host = d.select("Service").first();
         return host.attr("name");
     }
 

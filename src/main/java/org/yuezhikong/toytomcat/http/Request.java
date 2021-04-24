@@ -5,6 +5,7 @@ import org.yuezhikong.toytomcat.Bootstrap;
 import org.yuezhikong.toytomcat.catalina.Context;
 import org.yuezhikong.toytomcat.catalina.Engine;
 import org.yuezhikong.toytomcat.catalina.Host;
+import org.yuezhikong.toytomcat.catalina.Service;
 import org.yuezhikong.toytomcat.util.MiniBrowser;
 
 import java.io.IOException;
@@ -17,11 +18,10 @@ public class Request {
     private String uri;
     private Socket socket;
     private Context context;
-    private Engine engine;
-
-    public Request(Socket socket,Engine engine) throws IOException {
+    private Service service;
+    public Request(Socket socket,Service service) throws IOException {
         this.socket = socket;
-        this.engine = engine;
+        this.service = service;
         parseHttpRequest();
         if(StrUtil.isEmpty(requestString))
             return;
@@ -38,7 +38,7 @@ public class Request {
             path = "/";
         else
             path = "/" + path;
-
+        Engine engine = service.getEngine();
         context = engine.getDefaultHost().getContext(path);
         if (null == context){
             context = engine.getDefaultHost().getContext("/");
