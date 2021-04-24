@@ -7,9 +7,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
 import cn.hutool.system.SystemUtil;
 import org.yuezhikong.toytomcat.catalina.Context;
+import org.yuezhikong.toytomcat.catalina.Engine;
+import org.yuezhikong.toytomcat.catalina.Host;
 import org.yuezhikong.toytomcat.http.Request;
 import org.yuezhikong.toytomcat.http.Response;
 import org.yuezhikong.toytomcat.util.Constant;
+import org.yuezhikong.toytomcat.util.ServerXMLUtil;
 import org.yuezhikong.toytomcat.util.ThreadPoolUtil;
 
 import java.io.File;
@@ -17,10 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Bootstrap {
     public static Map<String, Context> contextMap = new HashMap<>();
@@ -28,8 +28,7 @@ public class Bootstrap {
     public static void main(String[] args) {
         try {
             logJVM();
-
-            scanContextsOnWebAppsFolder();
+            Engine engine = new Engine();
 
             int port = 18080;
 
@@ -41,7 +40,7 @@ public class Bootstrap {
                     @Override
                     public void run() {
                         try {
-                            Request request = new Request(s);
+                            Request request = new Request(s,engine);
                             Response response = new Response();
                             String uri = request.getUri();
                             if(null==uri)
@@ -85,15 +84,6 @@ public class Bootstrap {
             e.printStackTrace();
         }
 
-    }
-
-    private static void scanContextsOnWebAppsFolder() {
-        File[] folders = Constant.webappsFolder.listFiles();
-        for (File folder : folders) {
-            if (!folder.isDirectory())
-                continue;
-            loadContext(folder);
-        }
     }
 
     private static void loadContext(File folder) {

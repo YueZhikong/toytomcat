@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Server>
+<!--    <Context path="/b" docBase="G:\Desktop\toytomcat\webapps\b"/>-->
+    <Engine defaultHost="localhost">
+        <Host name = "localhost">
+            <Context path="/b" docBase="G:\Desktop\b"/>
+        </Host>
+    </Engine>
+</Server>

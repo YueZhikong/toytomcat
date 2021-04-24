@@ -3,6 +3,8 @@ package org.yuezhikong.toytomcat.http;
 import cn.hutool.core.util.StrUtil;
 import org.yuezhikong.toytomcat.Bootstrap;
 import org.yuezhikong.toytomcat.catalina.Context;
+import org.yuezhikong.toytomcat.catalina.Engine;
+import org.yuezhikong.toytomcat.catalina.Host;
 import org.yuezhikong.toytomcat.util.MiniBrowser;
 
 import java.io.IOException;
@@ -15,8 +17,11 @@ public class Request {
     private String uri;
     private Socket socket;
     private Context context;
-    public Request(Socket socket) throws IOException {
+    private Engine engine;
+
+    public Request(Socket socket,Engine engine) throws IOException {
         this.socket = socket;
+        this.engine = engine;
         parseHttpRequest();
         if(StrUtil.isEmpty(requestString))
             return;
@@ -34,9 +39,10 @@ public class Request {
         else
             path = "/" + path;
 
-        context = Bootstrap.contextMap.get(path);
-        if (null == context)
-            context = Bootstrap.contextMap.get("/");
+        context = engine.getDefaultHost().getContext(path);
+        if (null == context){
+            context = engine.getDefaultHost().getContext("/");
+        }
     }
 
     private void parseHttpRequest() throws IOException {
