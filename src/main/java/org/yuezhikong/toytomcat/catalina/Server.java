@@ -10,6 +10,7 @@ import org.yuezhikong.toytomcat.http.Request;
 import org.yuezhikong.toytomcat.http.Response;
 import org.yuezhikong.toytomcat.util.Constant;
 import org.yuezhikong.toytomcat.util.ThreadPoolUtil;
+import org.yuezhikong.toytomcat.util.WebXMLUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +64,10 @@ public class Server {
                                 String fileName = StrUtil.removePrefix(uri, "/");
                                 File file = FileUtil.file(context.getDocBase(),fileName);
                                 if(file.exists()){
+                                    String extName = FileUtil.extName(file);
+                                    String mimeType = WebXMLUtil.getMimeType(extName);
+                                    response.setContentType(mimeType);
+
                                     String fileContent = FileUtil.readUtf8String(file);
                                     response.getWriter().println(fileContent);
 
