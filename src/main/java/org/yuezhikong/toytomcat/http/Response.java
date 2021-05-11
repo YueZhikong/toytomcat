@@ -9,6 +9,7 @@ public class Response {
     private StringWriter stringWriter;
     private PrintWriter writer;
     private String contentType;
+    private byte[] body;
     public Response(){
         this.stringWriter = new StringWriter();
         this.writer = new PrintWriter(stringWriter);
@@ -24,9 +25,15 @@ public class Response {
     }
 
     public byte[] getBody() throws UnsupportedEncodingException {
-        String content = stringWriter.toString();
-        byte[] body = content.getBytes("utf-8");
+        if (null==body){
+            String content = stringWriter.toString();
+            body = content.getBytes("utf-8");
+        }
         return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
     }
 
     public void setContentType(String contentType) {

@@ -86,6 +86,26 @@ public class TestTomcat {
         containAssert(response, "Content-Type: text/plain");
     }
 
+    @Test
+    public void testPNG() {
+        byte[] bytes = getContentBytes("/logo.png");
+        int pngFileLength = 1672;
+        Assert.assertEquals(pngFileLength, bytes.length);
+    }
+    @Test
+    public void testPDF() {
+        byte[] bytes = getContentBytes("/etf.pdf");
+        int pngFileLength = 3590775;
+        Assert.assertEquals(pngFileLength, bytes.length);
+    }
+
+    private byte[] getContentBytes(String uri) {
+        return getContentBytes(uri,false);
+    }
+    private byte[] getContentBytes(String uri,boolean gzip) {
+        String url = StrUtil.format("http://{}:{}{}", ip,port,uri);
+        return MiniBrowser.getContentBytes(url,false);
+    }
     private String getContentString(String uri) {
         String url = StrUtil.format("http://{}:{}{}", ip,port,uri);
         String content = MiniBrowser.getContentString(url);
