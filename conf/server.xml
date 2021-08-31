@@ -2,6 +2,9 @@
 
 <Server>
     <Service name="Catalina">
+        <Connector port="18080"/>
+        <Connector port="18081"/>
+        <Connector port="18082"/>
         <Engine defaultHost="localhost">
             <Host name = "localhost">
                 <Context path="/b" docBase="G:\Desktop\b"/>
