@@ -8,11 +8,20 @@ import org.yuezhikong.toytomcat.catalina.Host;
 import org.yuezhikong.toytomcat.catalina.Service;
 import org.yuezhikong.toytomcat.util.MiniBrowser;
 
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
 
-public class Request {
+public class Request extends BaseRequest {
 
     private String requestString;
     private String uri;
@@ -75,5 +84,6 @@ public class Request {
     public String getRequestString(){
         return requestString;
     }
+
 
 }

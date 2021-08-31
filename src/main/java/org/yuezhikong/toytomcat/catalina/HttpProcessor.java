@@ -9,6 +9,7 @@ import org.yuezhikong.toytomcat.http.Request;
 import org.yuezhikong.toytomcat.http.Response;
 import org.yuezhikong.toytomcat.util.Constant;
 import org.yuezhikong.toytomcat.util.WebXMLUtil;
+import org.yuezhikong.toytomcat.webappservlet.HelloServlet;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,27 +28,31 @@ public class HttpProcessor {
             if("/500.html".equals(uri)){
                 throw new Exception("this is a deliberately created exception");
             }
+            if ("/hello".equals(uri)){
+                HelloServlet helloServlet = new HelloServlet();
+                helloServlet.doGet(request,response);
+            }else {
+                if("/".equals(uri))
+                    uri = WebXMLUtil.getWelcomeFile(request.getContext());
 
-            if("/".equals(uri))
-                uri = WebXMLUtil.getWelcomeFile(request.getContext());
+                String fileName = StrUtil.removePrefix(uri, "/");
+                File file = FileUtil.file(context.getDocBase(),fileName);
 
-            String fileName = StrUtil.removePrefix(uri, "/");
-            File file = FileUtil.file(context.getDocBase(),fileName);
+                if(file.exists()){
+                    String extName = FileUtil.extName(file);
+                    String mimeType = WebXMLUtil.getMimeType(extName);
+                    response.setContentType(mimeType);
 
-            if(file.exists()){
-                String extName = FileUtil.extName(file);
-                String mimeType = WebXMLUtil.getMimeType(extName);
-                response.setContentType(mimeType);
+                    byte body[] = FileUtil.readBytes(file);
+                    response.setBody(body);
 
-                byte body[] = FileUtil.readBytes(file);
-                response.setBody(body);
-
-                if(fileName.equals("timeConsume.html"))
-                    ThreadUtil.sleep(1000);
-            }
-            else{
-                handle404(s, uri);
-                return;
+                    if(fileName.equals("timeConsume.html"))
+                        ThreadUtil.sleep(1000);
+                }
+                else{
+                    handle404(s, uri);
+                    return;
+                }
             }
             handle200(s, response);
         } catch (Exception e) {
